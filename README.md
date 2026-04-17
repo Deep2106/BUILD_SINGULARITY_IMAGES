@@ -1,6 +1,6 @@
 # Bioinformatics Singularity Containers
 
-This repository contains definition files and build instructions for Singularity/Apptainer containers used in NGS pipelines.
+This repository contains definition files and build instructions for Singularity containers used in NGS pipelines.
 
 ## Project Overview
 Containers are primarily built from Docker Hub images. The **SpliceAI** container includes a custom modification to handle the Debian Buster EOL (End of Life) repository status, ensuring `apt-get` functionality.
