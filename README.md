@@ -27,6 +27,9 @@ Containers are primarily built from Docker Hub images. The **SpliceAI** containe
 | **Samtools** | 1.23 | staphb/samtools:1.23 |
 | **SpliceAI** | Modified | Custom (see below) |
 | **VCFTools** | 0.1.16.1 | biocontainers/vcftools:v0.1.16-1 |
+| **ngsbits** | 2025_12 | custom |
+| **Clincnv** | 1.19.1 | custom |
+| **VEP** | 115.2 | biocontainers/vcftools:v0.1.16-1 |
 
 ---
 
@@ -49,6 +52,7 @@ singularity build peddy_0.4.8.sif docker://clinicalgenomics/peddy:0.4.8
 singularity build python_3.14.2.sif docker://python:3.14.2
 singularity build samtools_1.23.sif docker://staphb/samtools:1.23
 singularity build vcftools_0.1.16.1.sif docker://biocontainers/vcftools:v0.1.16-1-deb_cv1
+singularity pull vep.sif docker://ensemblorg/ensembl-vep # latest-version
 ```
 ### spliceAI modification
 ```bash
@@ -77,6 +81,12 @@ Run commands within the containers using the following syntax:
 
 ```Bash
 singularity exec <image_name>.sif <command>
+```
+### ngsbits and clincnv
+
+```bash
+singularity build clincnv.sif clincnv.def
+singularity build ngsbits.sif ngsbits.def
 ```
 
 ---
