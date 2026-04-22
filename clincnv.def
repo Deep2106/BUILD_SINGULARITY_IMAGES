@@ -1,0 +1,100 @@
+Bootstrap: docker
+From: rocker/r-ver:4.2.0
+
+%labels
+    Author      Omri Teltsh / Deepak Bharti
+    Version     master
+    Description ClinCNV (master) with all R dependencies for WES germline CNV calling
+
+%post
+    # ── System libraries ────────────────────────────────────────────────────
+    apt-get update -qq && apt-get install -y --no-install-recommends \
+        git \
+        curl \
+        pkg-config \
+        build-essential \
+        libcurl4-openssl-dev \
+        libssl-dev \
+        libxml2-dev \
+        libgit2-dev \
+        libfontconfig1-dev \
+        libharfbuzz-dev \
+        libfribidi-dev \
+        libfreetype6-dev \
+        libpng-dev \
+        libtiff5-dev \
+        libjpeg-dev \
+        libwebp-dev \
+        libgmp-dev \
+        libmpfr-dev \
+        libgsl-dev \
+        libuv1-dev \
+        && apt-get clean \
+        && rm -rf /var/lib/apt/lists/*
+
+    # ── ClinCNV CRAN dependencies ────────────────────────────────────────────
+    R -e "install.packages(c( \
+        'optparse', \
+        'robustbase', \
+        'MASS', \
+        'data.table', \
+        'foreach', \
+        'doParallel', \
+        'mclust', \
+        'R.utils', \
+        'RColorBrewer', \
+        'dbscan', \
+        'umap', \
+        'Rcpp' \
+    ), repos='https://cloud.r-project.org', Ncpus=4)"
+
+    # ── party requires libmpfr (installed above) ─────────────────────────────
+    R -e "install.packages('party', repos='https://cloud.r-project.org', Ncpus=4)"
+
+    # ── Bioconductor ─────────────────────────────────────────────────────────
+    R -e "if (!requireNamespace('BiocManager', quietly=TRUE)) install.packages('BiocManager', repos='https://cloud.r-project.org')"
+    R -e "BiocManager::install('DNAcopy', ask=FALSE)"
+
+    # ── R filter script dependencies (vep_filter_1000gene.R) ─────────────────
+    # Install only what the script uses — avoids heavy optional tidyverse deps
+    # (googledrive, rmarkdown, gargle, ragg etc. not needed)
+    R -e "install.packages(c( \
+        'dplyr', \
+        'tidyr', \
+        'readr', \
+        'stringr', \
+        'readxl' \
+    ), repos='https://cloud.r-project.org', Ncpus=4)"
+
+    # ── Clone ClinCNV — no formal git tags, use master ───────────────────────
+    # ⚑ For reproducibility, pin to a commit after cloning:
+    #   cd /opt/clincnv && git checkout <commit_hash>
+    git clone --depth 1 https://github.com/imgag/ClinCNV.git /opt/clincnv
+
+    chmod +x /opt/clincnv/clinCNV.R
+    chmod +x /opt/clincnv/mergeFilesFromFolder.R
+
+    # Set EBROOTCLINCNV to match the SLURM module convention
+    echo 'export EBROOTCLINCNV=/opt/clincnv' >> /etc/environment
+
+    # ── Verify all packages load correctly ───────────────────────────────────
+    R -e "library(optparse); library(data.table); library(foreach); \
+          library(doParallel); library(mclust); library(party); \
+          library(DNAcopy); library(dplyr); library(tidyr); \
+          library(readxl); cat('All packages OK\n')"
+
+%environment
+    export EBROOTCLINCNV=/opt/clincnv
+    export PATH="/opt/clincnv:${PATH}"
+    export LC_ALL=C
+    export LANG=C
+
+%runscript
+    exec Rscript /opt/clincnv/clinCNV.R "$@"
+
+%test
+    Rscript -e "library(data.table); library(foreach); library(doParallel); \
+                library(mclust); library(party); library(DNAcopy); \
+                library(dplyr); library(tidyr); library(readxl); \
+                cat('Container test PASSED\n')"
+    Rscript /opt/clincnv/clinCNV.R --help
