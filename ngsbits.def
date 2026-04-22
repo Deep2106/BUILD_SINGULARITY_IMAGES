@@ -1,0 +1,36 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+
+%labels
+    Author      Deepak Bharti
+    Version     2025_12
+    Description ngs-bits 2025_12 installed via Bioconda (BedAnnotateGC, BedCoverage)
+
+%post
+    # ── Configure Bioconda channels (order matters) ──────────────────────────
+    conda config --add channels defaults
+    conda config --add channels conda-forge
+    conda config --add channels bioconda
+
+    # ── Install ngs-bits pinned to 2025_12 ───────────────────────────────────
+    # ⚑ Confirm exact conda package version with:
+    #   conda search -c bioconda ngs-bits
+    # Update conda and Python before installing to satisfy ngs-bits 2025_12 python>=3.14 requirement
+    conda update -y conda
+    conda install -y python=3.14
+    conda install -y -c bioconda ngs-bits=2025_12
+
+    conda clean -afy
+
+%environment
+    export PATH="/opt/conda/bin:${PATH}"
+    export LC_ALL=C
+    export LANG=C
+
+%runscript
+    exec "$@"
+
+%test
+    BedAnnotateGC --version
+    BedCoverage   --version
+    echo "ngs-bits container test PASSED"
