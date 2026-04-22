@@ -53,6 +53,7 @@ singularity build python_3.14.2.sif docker://python:3.14.2
 singularity build samtools_1.23.sif docker://staphb/samtools:1.23
 singularity build vcftools_0.1.16.1.sif docker://biocontainers/vcftools:v0.1.16-1-deb_cv1
 singularity pull vep.sif docker://ensemblorg/ensembl-vep # latest-version
+singularity pull clincnv.sif docker://deepb2106/clincnv:latest
 ```
 ### spliceAI modification
 ```bash
