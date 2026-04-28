@@ -20,7 +20,7 @@ Containers are primarily built from Docker Hub images. The **SpliceAI** containe
 | **FastQC** | 0.12.1 | getwilds/fastqc:0.12.1 |
 | **GATK4** | 4.6.2.0 | broadinstitute/gatk:4.6.2.0 |
 | **GLnexus** | 1.2.7 | edansare/glnexus |
-| **Mosdepth** | 0.3.11 | gfanz/mosdepth |
+| **Mosdepth** | 0.3.11 | deepb2106/mosdepth |
 | **MultiQC** | 1.33 | multiqc/multiqc:v1.33 |
 | **Peddy** | 0.4.8 | clinicalgenomics/peddy:0.4.8 |
 | **Python** | 3.14.2 | python:3.14.2 |
