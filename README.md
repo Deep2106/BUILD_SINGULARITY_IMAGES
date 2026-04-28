@@ -29,8 +29,8 @@ Containers are primarily built from Docker Hub images. The **SpliceAI** containe
 | **VCFTools** | 0.1.16.1 | biocontainers/vcftools:v0.1.16-1 |
 | **ngsbits** | 2025_12 | custom def/[deepb2106/ngsbits](https://hub.docker.com/r/deepb2106/ngsbits)|
 | **Peddy** | 0.4.8 | clinicalgenomics/peddy:0.4.8 | |
-| **Clincnv** | 1.19.1 | custom def / deepb2106/clincnv:latest v.115| 
-| **VEP** | 115.2 | ensemblorg/ensembl-vep |
+| **Clincnv** | 1.19.1 | custom def / deepb2106/clincnv:latest | 
+| **VEP** | 115.2 | ensemblorg/ensembl-vep v.115|
 
 ---
 
