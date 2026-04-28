@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%post
+    # Enable universe repository (required for procps)
+    apt-get update
+    apt-get install -y software-properties-common
+    add-apt-repository universe
+    apt-get update
+
+    # Install procps (provides ps, top, etc.) and wget
+    apt-get install -y procps wget ca-certificates
+
+    # Install mosdepth 0.3.11
+    wget -q https://github.com/brentp/mosdepth/releases/download/v0.3.11/mosdepth
+    chmod +x mosdepth
+    mv mosdepth /usr/local/bin/
+
+    # Cleanup to reduce image size
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    exec mosdepth "$@"
+
+%labels
+    Maintainer "Deepak Bharti"
+    Tool "mosdepth"
+    Version "0.3.11-with-ps"
