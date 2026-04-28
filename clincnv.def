@@ -2,7 +2,7 @@ Bootstrap: docker
 From: rocker/r-ver:4.2.0
 
 %labels
-    Author      Deepak Bharti
+    Author      Omri Teltsh / Deepak Bharti
     Version     master
     Description ClinCNV (master) with all R dependencies for WES germline CNV calling
 
@@ -73,6 +73,18 @@ From: rocker/r-ver:4.2.0
 
     chmod +x /opt/clincnv/clinCNV.R
     chmod +x /opt/clincnv/mergeFilesFromFolder.R
+
+    # ── Fix strsplit bug (GitHub issue #42) ──────────────────────────────────
+    # trios/helpersTrio.R:30 and germline/helpersGermline.R:140 crash when
+    # gene column contains NA or empty string (e.g. 'backbone' entries with no gene)
+    # Fix: add NA/empty guard before strsplit call in both files
+    sed -i 's|unlist(strsplit(genesThatHasToBeSeparated\[i\], split=","))|if (!is.na(genesThatHasToBeSeparated[i]) \&\& nchar(genesThatHasToBeSeparated[i]) > 0) unlist(strsplit(genesThatHasToBeSeparated[i], split=",")) else character(0)|g' \
+        /opt/clincnv/trios/helpersTrio.R \
+        /opt/clincnv/germline/helpersGermline.R
+
+    echo "strsplit patch applied:"
+    grep -n "genesThatHasToBeSeparated" /opt/clincnv/trios/helpersTrio.R
+    grep -n "genesThatHasToBeSeparated" /opt/clincnv/germline/helpersGermline.R
 
     # Set EBROOTCLINCNV to match the SLURM module convention
     echo 'export EBROOTCLINCNV=/opt/clincnv' >> /etc/environment
