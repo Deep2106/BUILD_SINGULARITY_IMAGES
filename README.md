@@ -47,7 +47,7 @@ singularity build deepvariant_1.9.0.sif docker://google/deepvariant:1.9.0
 singularity build fastp_0.23.4.sif docker://mgibio/fastp:v0.23.4-noble
 singularity build fastqc_0.12.1.sif docker://getwilds/fastqc:0.12.1
 singularity build gatk4_4.6.2.0.sif docker://broadinstitute/gatk:4.6.2.0
-singularity build mosdepth_0.3.11.sif docker://gfanz/mosdepth
+singularity build mosdepth_0.3.11.sif docker://deepb2106/mosdepth
 singularity build multiqc_1.33.sif docker://multiqc/multiqc:v1.33
 singularity build peddy_0.4.8.sif docker://clinicalgenomics/peddy:0.4.8
 singularity build python_3.14.2.sif docker://python:3.14.2
